@@ -1,17 +1,43 @@
-const Posts = require("./post.model")
+const Post = require("./posts.model")
 
-exports.getAllPosts = async (req,res) => {
-    const post = await Posts.find({});
-    res.status(200).json({ post });
-};
-
-exports.createPost = async(req,res)=> {
-    const {title, body} = req.body;
-
-    const post = await Posts.create({
-        title,
-        body,
-    })
-    res.status(201).json({post});
+const getPosts = async(req,res) => {
+    const posts =await Post.find({})
+    res.status(200).json({posts});
 }
 
+const getPost = async(req,res)=>{
+    const post =await Post.findById(req.params.postId);
+    res.status(200).json({post});
+}
+const createPost = async(req,res)=>{
+    const {tittle,body,published} =req.body;
+
+    const post =await Post.create({
+        tittle,
+        body,
+        published,
+    });
+    res.status(200).json({post});
+}
+
+const updatePost = async(req,res)=>{
+    const {postId} =req.params;
+    const {userId} =req.body;
+
+    const post =await Post.findByIdAndUpdate(postId, {...req.body},{new:true})
+
+    res.status(200).json({post});
+}
+
+const deletePost = async(req,res)=>{
+    const post =await Post.findByIdAndDelete(req.params.postId);
+    res.status(200).json(" post deleted successfully");
+};
+
+module.exports={
+    getPosts,
+    getPost,
+    createPost,
+    updatePost,
+    deletePost,
+}
